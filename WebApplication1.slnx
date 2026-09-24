@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="WebApplication1.AppHost/WebApplication1.AppHost.csproj" />
+  <Project Path="WebApplication1.ServiceDefaults/WebApplication1.ServiceDefaults.csproj" />
+  <Project Path="WebApplication1/WebApplication1.csproj" />
+</Solution>

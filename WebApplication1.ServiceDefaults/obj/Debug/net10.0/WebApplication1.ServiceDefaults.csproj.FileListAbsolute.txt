@@ -1,0 +1,13 @@
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\bin\Debug\net10.0\WebApplication1.ServiceDefaults.deps.json
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\bin\Debug\net10.0\WebApplication1.ServiceDefaults.dll
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\bin\Debug\net10.0\WebApplication1.ServiceDefaults.pdb
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.csproj.AssemblyReference.cache
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.AssemblyInfoInputs.cache
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.AssemblyInfo.cs
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.dll
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\refint\WebApplication1.ServiceDefaults.dll
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebApplication1.ServiceDefaults.pdb
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\ref\WebApplication1.ServiceDefaults.dll
+C:\Users\miche\source\repos\WebApplication1\WebApplication1.ServiceDefaults\obj\Debug\net10.0\WebAppli.6B3FC1B5.Up2Date

@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model WebApplication1.Models.NeedViewModel
+
+<h1>Registrer behov</h1>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label asp-for="Title">Hva trenger du hjelp med?</label>
+        <input asp-for="Title" />
+    </div>
+
+    <div>
+        <label asp-for="Description">Beskriv behovet</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+
+    <button type="submit">Registrer behov</button>
+
+</form>
