@@ -1,0 +1,129 @@
+﻿@model List<Kart.Models.Ressurs>
+
+@{
+    ViewData["Title"] = "Registrer ressurs";
+}
+
+<h1>Registrer ressurs</h1>
+
+@if (Model != null && Model.Any())
+{
+    <h2>Registrerte ressurser</h2>
+
+    foreach (var ressurs in Model)
+    {
+        <div class="card mt-3 mb-4">
+            <div class="card-body">
+                <h3 class="card-title">@ressurs.Navn</h3>
+
+                <p><strong>Type:</strong> @ressurs.Type</p>
+                <p><strong>Beskrivelse:</strong> @ressurs.Beskrivelse</p>
+                <p><strong>Latitude:</strong> @ressurs.Latitude</p>
+                <p><strong>Longitude:</strong> @ressurs.Longitude</p>
+            </div>
+        </div>
+    }
+}
+
+
+<form asp-action="Index" method="post">
+
+<div class="mb-3">
+    <label>Navn på ressurs</label>
+    <input type="text" id="navn" name="Navn" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label>Type ressurs</label>
+    <select id="type" name="Type" class="form-control">
+        <option value="">Velg type</option>
+        <option value="Kjøretøy">Kjøretøy</option>
+        <option value="Maskin">Maskin</option>
+        <option value="Drone">Drone</option>
+        <option value="Generator">Generator</option>
+        <option value="Personell">Personell</option>
+        <option value="Utstyr">Utstyr</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label>Beskrivelse</label>
+    <textarea id="beskrivelse" name="Beskrivelse" class="form-control"></textarea>
+</div>
+<div class="mb-3">
+    <label>Latitude</label>
+    <input type="text" id="latitude" name="Latitude" class="form-control" readonly />
+</div>
+
+<div class="mb-3">
+    <label>Longitude</label>
+    <input type="text" id="longitude" name="Longitude" class="form-control" readonly />
+</div>
+<div class="mb-3">
+    <button type="submit" id="registrer" class="btn btn-primary">
+        Registrer ressurs
+    </button>
+</div>
+</form>
+<h4>Velg plassering på kartet</h4>
+
+<div id="map"></div>
+
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+</style>
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    var ressurser = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+</script>
+    <script>
+     var map = L.map('map').setView([58.1467, 7.9956], 13);
+
+     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '&copy; OpenStreetMap contributors'
+     }).addTo(map);
+
+     var marker;
+         ressurser.forEach(function (ressurs) {
+
+        var ressursMarker = L.marker([
+            ressurs.Latitude,
+            ressurs.Longitude
+        ]).addTo(map);
+
+        ressursMarker.bindPopup(
+            "<strong>" + ressurs.Navn + "</strong><br>" +
+            "Type: " + ressurs.Type + "<br>" +
+            ressurs.Beskrivelse
+        );
+    });
+     map.on('click', function (e) {
+
+         var latitude = e.latlng.lat;
+         var longitude = e.latlng.lng;
+            
+         document.getElementById("latitude").value =
+             latitude.toFixed(6);
+
+         document.getElementById("longitude").value =
+             longitude.toFixed(6);
+
+         if (marker) {
+             map.removeLayer(marker);
+         }
+
+         marker = L.marker([latitude, longitude]).addTo(map);
+
+         marker.bindPopup(
+             "Latitude: " + latitude.toFixed(6) +
+             "<br>Longitude: " + longitude.toFixed(6)
+         ).openPopup();
+     });
+</script>
