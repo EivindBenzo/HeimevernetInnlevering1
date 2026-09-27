@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Skjema";
+}
+
+<h1>Skjema</h1>
+
+<form method="post" asp-action="Form">
+    <label for="firstName">Fornavn</label>
+    <input type="text" id="firstName" name="firstName" required />
+
+    <label for="lastName">Etternavn</label>
+    <input type="text" id="lastName" name="lastName" required />
+
+    <label for="email">E-post</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="message">Beskrivelse</label>
+    <textarea id="message" name="message" rows="5" required></textarea>
+
+    <button type="submit">Send inn</button>
+</form>
