@@ -6,10 +6,17 @@
 <div class="map-container">
     <span class="eyebrow">LOKASJON</span>
     <h1>Kart</h1>
-    <p>Klikk på kartet for å velge en lokasjon, eller skriv inn koordinatene manuelt.</p>
+    <p>Søk etter en by, klikk på kartet, eller skriv inn koordinatene manuelt.</p>
 
     <form method="post" asp-action="Map" class="form">
         <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="form-group city-search-group">
+            <label for="citySearch">Søk etter by</label>
+            <input type="text" id="citySearch" class="form-control" placeholder="Skriv navnet på en by, f.eks. Bergen" autocomplete="off" />
+            <ul id="citySuggestions" class="city-suggestions"></ul>
+            <span class="info" id="citySearchStatus"></span>
+        </div>
 
         <div class="form-group">
             <label for="locationName">Lokasjonsnavn <span class="required">*</span></label>
@@ -30,7 +37,7 @@
             </div>
         </div>
 
-        <p class="info">Standardkoordinater: Oslo (59.9139°N, 10.7522°E). Klikk i kartet for å oppdatere feltene automatisk.</p>
+        <p class="info">Standardkoordinater: Oslo (59.9139°N, 10.7522°E). Søk etter en by, klikk i kartet, eller skriv inn koordinatene for å oppdatere feltene automatisk.</p>
         <div id="map" aria-label="Interaktivt kart"></div>
         <button type="submit" class="btn-submit">Vis kart</button>
     </form>
@@ -50,14 +57,103 @@
     let marker = L.marker([startLat, startLng]).addTo(map);
     marker.bindPopup('Valgt lokasjon').openPopup();
 
+    function setLocation(lat, lng, label) {
+        map.setView([lat, lng], 12);
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(label || ('Latitude: ' + lat.toFixed(6) + '<br>Longitude: ' + lng.toFixed(6))).openPopup();
+
+        document.getElementById('latitude').value = lat.toFixed(6);
+        document.getElementById('longitude').value = lng.toFixed(6);
+    }
+
     map.on('click', function (event) {
         const latitude = event.latlng.lat;
         const longitude = event.latlng.lng;
-        document.getElementById('latitude').value = latitude.toFixed(6);
-        document.getElementById('longitude').value = longitude.toFixed(6);
+        setLocation(latitude, longitude, 'Latitude: ' + latitude.toFixed(6) + '<br>Longitude: ' + longitude.toFixed(6));
+    });
 
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([latitude, longitude]).addTo(map);
-        marker.bindPopup('Latitude: ' + latitude.toFixed(6) + '<br>Longitude: ' + longitude.toFixed(6)).openPopup();
+    // City search with autocomplete using OpenStreetMap Nominatim
+    const citySearchInput = document.getElementById('citySearch');
+    const citySuggestionsList = document.getElementById('citySuggestions');
+    const citySearchStatus = document.getElementById('citySearchStatus');
+    const locationNameInput = document.getElementById('locationName');
+
+    let searchTimeout = null;
+    let currentController = null;
+
+    function clearSuggestions() {
+        citySuggestionsList.innerHTML = '';
+        citySuggestionsList.classList.remove('open');
+    }
+
+    function renderSuggestions(results) {
+        clearSuggestions();
+
+        if (!results || results.length === 0) {
+            return;
+        }
+
+        results.forEach(function (place) {
+            const item = document.createElement('li');
+            item.className = 'city-suggestion-item';
+            item.textContent = place.display_name;
+
+            item.addEventListener('click', function () {
+                const lat = parseFloat(place.lat);
+                const lng = parseFloat(place.lon);
+                const shortName = place.display_name.split(',')[0];
+
+                locationNameInput.value = shortName;
+                citySearchInput.value = place.display_name;
+
+                setLocation(lat, lng, place.display_name);
+                clearSuggestions();
+            });
+
+            citySuggestionsList.appendChild(item);
+        });
+
+        citySuggestionsList.classList.add('open');
+    }
+
+    citySearchInput.addEventListener('input', function () {
+        const query = citySearchInput.value.trim();
+
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        if (query.length < 2) {
+            clearSuggestions();
+            citySearchStatus.textContent = '';
+            return;
+        }
+
+        citySearchStatus.textContent = 'Søker...';
+
+        searchTimeout = setTimeout(function () {
+            if (currentController) currentController.abort();
+            currentController = new AbortController();
+
+            const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=0&limit=6&q=' + encodeURIComponent(query);
+
+            fetch(url, { signal: currentController.signal, headers: { 'Accept-Language': 'no,en' } })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    citySearchStatus.textContent = data.length === 0 ? 'Ingen treff' : '';
+                    renderSuggestions(data);
+                })
+                .catch(function (error) {
+                    if (error.name !== 'AbortError') {
+                        citySearchStatus.textContent = 'Kunne ikke hente forslag akkurat nå.';
+                    }
+                });
+        }, 400);
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!citySuggestionsList.contains(event.target) && event.target !== citySearchInput) {
+            clearSuggestions();
+        }
     });
 </script>
