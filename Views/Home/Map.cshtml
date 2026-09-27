@@ -6,7 +6,7 @@
 <div class="map-container">
     <span class="eyebrow">LOKASJON</span>
     <h1>Kart</h1>
-    <p>Søk etter en by, klikk på kartet, eller skriv inn koordinatene manuelt.</p>
+    <p>Søk etter en by eller klikk på kartet for å velge en lokasjon.</p>
 
     <form method="post" asp-action="Map" class="form">
         <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
@@ -24,20 +24,10 @@
             <span asp-validation-for="LocationName" class="text-danger"></span>
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="latitude">Breddegrad <span class="required">*</span></label>
-                <input type="number" id="latitude" name="latitude" step="0.000001" value="@(Model?.Latitude ?? 59.9139)" class="form-control" required />
-                <span asp-validation-for="Latitude" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="longitude">Lengdegrad <span class="required">*</span></label>
-                <input type="number" id="longitude" name="longitude" step="0.000001" value="@(Model?.Longitude ?? 10.7522)" class="form-control" required />
-                <span asp-validation-for="Longitude" class="text-danger"></span>
-            </div>
-        </div>
+        <input type="hidden" id="latitude" name="latitude" value="@((Model?.Latitude ?? 59.9139).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+        <input type="hidden" id="longitude" name="longitude" value="@((Model?.Longitude ?? 10.7522).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
 
-        <p class="info">Standardkoordinater: Oslo (59.9139°N, 10.7522°E). Søk etter en by, klikk i kartet, eller skriv inn koordinatene for å oppdatere feltene automatisk.</p>
+        <p class="info">Standardlokasjon: Oslo. Søk etter en by eller klikk i kartet for å velge lokasjon.</p>
         <div id="map" aria-label="Interaktivt kart"></div>
         <button type="submit" class="btn-submit">Vis kart</button>
     </form>
@@ -46,8 +36,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const startLat = @(Model?.Latitude ?? 59.9139);
-    const startLng = @(Model?.Longitude ?? 10.7522);
+    const startLat = @((Model?.Latitude ?? 59.9139).ToString(System.Globalization.CultureInfo.InvariantCulture));
+    const startLng = @((Model?.Longitude ?? 10.7522).ToString(System.Globalization.CultureInfo.InvariantCulture));
     const map = L.map('map').setView([startLat, startLng], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -64,8 +54,8 @@
         marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup(label || ('Latitude: ' + lat.toFixed(6) + '<br>Longitude: ' + lng.toFixed(6))).openPopup();
 
-        document.getElementById('latitude').value = lat.toFixed(6);
-        document.getElementById('longitude').value = lng.toFixed(6);
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
     }
 
     map.on('click', function (event) {
