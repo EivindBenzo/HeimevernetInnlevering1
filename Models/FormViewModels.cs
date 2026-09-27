@@ -35,10 +35,3 @@ public class MapSubmissionViewModel
     [Range(-180, 180, ErrorMessage = "Lengdegrad må være mellom -180 og 180")]
     public double Longitude { get; set; }
 }
-
-public class DataViewModel
-{
-    // TODO: When database is integrated (from Marius branch), add:
-    // public List<FormSubmission> FormSubmissions { get; set; } = new();
-    // public List<MapSubmission> MapSubmissions { get; set; } = new();
-}

@@ -13,7 +13,7 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Form()
     {
-        return View();
+        return View(new FormSubmissionViewModel());
     }
 
     [HttpPost]
@@ -24,10 +24,6 @@ public class HomeController : Controller
         {
             return View(model);
         }
-
-        // TODO: When database is integrated (from Marius branch), add:
-        // _context.FormSubmissions.Add(new FormSubmission { ... });
-        // await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Result), new
         {
@@ -49,7 +45,7 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Map()
     {
-        return View();
+        return View(new MapSubmissionViewModel());
     }
 
     [HttpPost]
@@ -60,10 +56,6 @@ public class HomeController : Controller
         {
             return View(model);
         }
-
-        // TODO: When database is integrated (from Marius branch), add:
-        // _context.MapSubmissions.Add(new MapSubmission { ... });
-        // await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(MapResult), new
         {
@@ -85,11 +77,6 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Data()
     {
-        // TODO: When database is integrated (from Marius branch), add:
-        // var formSubmissions = await _context.FormSubmissions.ToListAsync();
-        // var mapSubmissions = await _context.MapSubmissions.ToListAsync();
-        // return View(new DataViewModel { FormSubmissions = formSubmissions, MapSubmissions = mapSubmissions });
-
         return View();
     }
 }

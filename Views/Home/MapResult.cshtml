@@ -21,19 +21,17 @@
     </div>
 
     <div class="result-item">
-        <div class="result-label">Google Maps Link</div>
+        <div class="result-label">Google Maps</div>
         <div class="result-value">
-            <a href="https://maps.google.com/?q=@ViewBag.Latitude,@ViewBag.Longitude" target="_blank">
-                Åpne i Google Maps
-            </a>
+            <a href="https://maps.google.com/?q=@ViewBag.Latitude,@ViewBag.Longitude" target="_blank">Åpne i Google Maps</a>
         </div>
     </div>
 
     <div style="margin-top: 2rem;">
-        <p><strong>Takk for innlevering av kartkoordinater!</strong></p>
+        <p><strong>Takk for innlevering!</strong></p>
         <p>
-            <a asp-controller="Home" asp-action="Map" class="btn-submit" style="display: inline-block; width: auto; margin-top: 0;">Velg nye koordinater</a>
-            <a asp-controller="Home" asp-action="Index" style="margin-left: 1rem; color: #1e40af; text-decoration: none;">Tilbake til hjemmen</a>
+            <a asp-controller="Home" asp-action="Map" class="nav-link">Velg nye koordinater</a>
+            <a asp-controller="Home" asp-action="Index" class="nav-link">Tilbake til hjemmen</a>
         </p>
     </div>
 </div>

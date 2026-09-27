@@ -65,9 +65,11 @@ header {
     min-height: calc(100vh - 200px);
 }
 
+.home-content,
 .form-container,
 .map-container,
-.data-container {
+.data-container,
+.result-content {
     background: white;
     padding: 2rem;
     border-radius: 8px;
@@ -156,10 +158,6 @@ textarea.form-control {
     box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
 }
 
-.btn-submit:active {
-    transform: translateY(0);
-}
-
 .info {
     font-size: 0.875rem;
     color: #6b7280;
@@ -178,13 +176,6 @@ h2 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
     color: #1f2937;
-}
-
-h3 {
-    font-size: 1.25rem;
-    margin-top: 1rem;
-    margin-bottom: 0.75rem;
-    color: #374151;
 }
 
 ul, ol {
@@ -221,16 +212,11 @@ footer {
     margin-bottom: 2rem;
 }
 
-.guide-section {
-    margin-bottom: 1.5rem;
-}
-
 .current-features {
     background-color: #f0fdf4;
     border-left: 4px solid #16a34a;
     padding: 1.5rem;
     border-radius: 6px;
-    margin-bottom: 2rem;
 }
 
 .current-features ul {
@@ -240,35 +226,6 @@ footer {
 
 .current-features li {
     margin-bottom: 0.5rem;
-}
-
-pre {
-    background-color: #1f2937;
-    color: #e5e7eb;
-    padding: 1rem;
-    border-radius: 6px;
-    overflow-x: auto;
-    margin: 0.5rem 0;
-    font-size: 0.875rem;
-}
-
-code {
-    font-family: 'Courier New', monospace;
-}
-
-.placeholder {
-    text-align: center;
-    padding: 2rem;
-    background-color: #f9fafb;
-    border-radius: 6px;
-    color: #9ca3af;
-}
-
-.result-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
 .result-item {
@@ -307,6 +264,7 @@ code {
         padding: 0 1rem;
     }
 
+    .home-content,
     .form-container,
     .map-container,
     .data-container,
@@ -316,10 +274,6 @@ code {
 
     h1 {
         font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.25rem;
     }
 
     .nav-container {

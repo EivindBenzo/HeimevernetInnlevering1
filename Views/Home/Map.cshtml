@@ -5,7 +5,7 @@
 
 <div class="map-container">
     <h1>Kart</h1>
-    <p>Velg en lokasjon og skriv inn koordinatene. Du kan bruke default Oslo-koordinater eller endre dem.</p>
+    <p>Velg en lokasjon og skriv inn koordinatene.</p>
 
     <form method="post" asp-action="Map" class="form">
         <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
@@ -31,7 +31,6 @@
         </div>
 
         <p class="info">Standard koordinater: Oslo (59.9139°N, 10.7522°E)</p>
-
         <button type="submit" class="btn-submit">Vis kart</button>
     </form>
 </div>
