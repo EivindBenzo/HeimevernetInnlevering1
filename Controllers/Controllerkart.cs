@@ -1,33 +1,54 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using Kart.Models;
-using System.Collections.Generic;
+using Kart.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kart.Controllers
 {
     public class Controllerkart : Controller
     {
-        private static List<Ressurs> ressurser = new List<Ressurs>();
-        public IActionResult Index()
+        private readonly AppDbContext _context;
+
+        public Controllerkart(AppDbContext context)
         {
-            return View(ressurser);
+            _context = context;
         }
-        [HttpPost]
-        public IActionResult Index(RessursViewModel ressurs)
+
+        // GET
+        public async Task<IActionResult> Index()
         {
-            var nyRessurs = new Ressurs
+            var viewModel = new ControllerkartViewModel
             {
-                Navn = ressurs.Navn,
-                Type = ressurs.Type,
-                Beskrivelse = ressurs.Beskrivelse,
-                Latitude = ressurs.Latitude,
-                Longitude = ressurs.Longitude
+                RegistrerteRessurser = await _context.Ressurser.ToListAsync()
             };
 
-            ressurser.Add(nyRessurs);
+            return View(viewModel);
+        }
+        // POST
+        [HttpPost]
+        public async Task<IActionResult> Index(ControllerkartViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.RegistrerteRessurser = await _context.Ressurser.ToListAsync();
 
-            return View(ressurser);
+                return View(model);
+            }
+
+            var nyRessurs = new Ressurs
+            {
+                Navn = model.NyRessurs.Navn,
+                Type = model.NyRessurs.Type,
+                Beskrivelse = model.NyRessurs.Beskrivelse,
+                Latitude = model.NyRessurs.Latitude,
+                Longitude = model.NyRessurs.Longitude
+            };
+
+            _context.Ressurser.Add(nyRessurs);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
- }
-
+}
