@@ -281,14 +281,12 @@ textarea.form-control {
 }
 
 .validation-summary {
-    background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(244, 63, 94, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(244, 63, 94, 0.15));
     border-left: 4px solid #f87171;
     border-radius: 10px;
     color: #fca5a5;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(248, 113, 113, 0.2);
 }
 
 .text-danger {
@@ -441,7 +439,6 @@ footer {
     text-decoration: none;
 }
 
-/* Homepage Hero with Photo Background */
 .hero-photo {
     min-height: 600px;
     position: relative;
@@ -451,9 +448,7 @@ footer {
     overflow: hidden;
     padding: 3rem;
     background-color: #0f172a;
-    background-image:
-        linear-gradient(rgba(4, 17, 34, 0.42), rgba(4, 17, 34, 0.68)),
-        url('/images/Heimevernet-background.jpg');
+    background-image: linear-gradient(rgba(4, 17, 34, 0.42), rgba(4, 17, 34, 0.68)), url('/images/Heimevernet-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -495,11 +490,69 @@ footer {
     margin-top: 1.5rem;
 }
 
-@media (max-width: 768px) {
-    .nav-menu {
-        right: 1rem;
-    }
+/* Map and city autocomplete */
+#map {
+    width: 100%;
+    height: 500px;
+    min-height: 360px;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
 
+.city-search-group {
+    position: relative;
+    z-index: 20;
+}
+
+.city-suggestions {
+    display: none;
+    position: absolute;
+    top: calc(100% - 1rem);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background: rgba(15, 23, 42, 0.98);
+    border: 1px solid rgba(96, 165, 250, 0.45);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.city-suggestions.open {
+    display: block;
+}
+
+.city-suggestion-item {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    color: #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.city-suggestion-item:hover,
+.city-suggestion-item:focus {
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateX(4px);
+    outline: none;
+}
+
+.leaflet-container {
+    font-family: inherit;
+    background: #cbd5e1;
+}
+
+@media (max-width: 768px) {
     .form-row,
     .feature-grid {
         grid-template-columns: 1fr;
@@ -542,6 +595,10 @@ footer {
 
     .hero-title-big {
         font-size: clamp(3.5rem, 17vw, 6rem);
+    }
+
+    #map {
+        height: 380px;
     }
 }
 
