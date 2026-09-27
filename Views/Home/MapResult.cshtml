@@ -2,8 +2,38 @@
     ViewData["Title"] = "Kartresultat";
 }
 
-<h1>Valgt sted</h1>
+<div class="result-content">
+    <h1>Kartkoordinater Mottatt</h1>
 
-<p><strong>Lokasjon:</strong> @ViewBag.LocationName</p>
-<p><strong>Breddegrad:</strong> @ViewBag.Latitude</p>
-<p><strong>Lengdegrad:</strong> @ViewBag.Longitude</p>
+    <div class="result-item">
+        <div class="result-label">Lokasjon</div>
+        <div class="result-value">@ViewBag.LocationName</div>
+    </div>
+
+    <div class="result-item">
+        <div class="result-label">Breddegrad</div>
+        <div class="result-value">@ViewBag.Latitude</div>
+    </div>
+
+    <div class="result-item">
+        <div class="result-label">Lengdegrad</div>
+        <div class="result-value">@ViewBag.Longitude</div>
+    </div>
+
+    <div class="result-item">
+        <div class="result-label">Google Maps Link</div>
+        <div class="result-value">
+            <a href="https://maps.google.com/?q=@ViewBag.Latitude,@ViewBag.Longitude" target="_blank">
+                Åpne i Google Maps
+            </a>
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <p><strong>Takk for innlevering av kartkoordinater!</strong></p>
+        <p>
+            <a asp-controller="Home" asp-action="Map" class="btn-submit" style="display: inline-block; width: auto; margin-top: 0;">Velg nye koordinater</a>
+            <a asp-controller="Home" asp-action="Index" style="margin-left: 1rem; color: #1e40af; text-decoration: none;">Tilbake til hjemmen</a>
+        </p>
+    </div>
+</div>

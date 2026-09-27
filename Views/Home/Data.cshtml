@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Data";
+}
+
+<div class="data-container">
+    <h1>Data og Innlevering</h1>
+
+    <div class="data-status">
+        <h2>Status: Database ikke integert ennå</h2>
+        <p>For å vise lagrede data fra skjemaer og kartsubmisjoner, må database-integrasjonen fra Marius-branchen legges til.</p>
+    </div>
+
+    <div class="integration-guide">
+        <h2>Hvordan integrere database (Marius-branch)</h2>
+
+        <div class="guide-section">
+            <h3>1. Modeller som trengs:</h3>
+            <ul>
+                <li>FormSubmission - for å lagre skjemainnlevering</li>
+                <li>MapSubmission - for å lagre kartinnlevering</li>
+            </ul>
+        </div>
+
+        <div class="guide-section">
+            <h3>2. Database kontekst (AppDbContext):</h3>
+            <pre><code>public DbSet&lt;FormSubmission&gt; FormSubmissions { get; set; }
+public DbSet&lt;MapSubmission&gt; MapSubmissions { get; set; }</code></pre>
+        </div>
+
+        <div class="guide-section">
+            <h3>3. View-modell oppdatering:</h3>
+            <p>DataViewModel skal inneholde lister med innleverte data fra databasen.</p>
+        </div>
+
+        <div class="guide-section">
+            <h3>4. Controller oppdatering:</h3>
+            <p>Når Form() og Map() POST-handlinger kjøres, skal data lagres til databasen:</p>
+            <pre><code>_context.FormSubmissions.Add(new FormSubmission { ... });
+await _context.SaveChangesAsync();</code></pre>
+        </div>
+
+        <div class="guide-section">
+            <h3>5. Data()-siden skal vise:</h3>
+            <ul>
+                <li>Tabell over alle skjemasubmisjoner</li>
+                <li>Tabell over alle kartsubmisjoner</li>
+                <li>Mulighet for å slette eller redigere data</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="current-features">
+        <h2>Nåværende funksjoner (forberedt for database):</h2>
+        <ul>
+            <li>✅ FormSubmissionViewModel med validering</li>
+            <li>✅ MapSubmissionViewModel med validering</li>
+            <li>✅ Form-side med POST-håndtering</li>
+            <li>✅ Kart-side med POST-håndtering</li>
+            <li>✅ Result-side for å vise insendt data</li>
+            <li>✅ MapResult-side for å vise kartdata</li>
+            <li>✅ Kommentarer i kontroller for hvor database-kode skal legges inn</li>
+            <li>⏳ Data()-side - venter på database-integrering</li>
+        </ul>
+    </div>
+
+    <div class="placeholder">
+        <p><em>Data fra skjemaer og kart vil vises her når database er integret.</em></p>
+    </div>
+</div>

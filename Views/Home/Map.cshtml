@@ -1,18 +1,37 @@
+@model MapSubmissionViewModel
 @{
     ViewData["Title"] = "Kart";
 }
 
-<h1>Kart</h1>
+<div class="map-container">
+    <h1>Kart</h1>
+    <p>Velg en lokasjon og skriv inn koordinatene. Du kan bruke default Oslo-koordinater eller endre dem.</p>
 
-<form method="post" asp-action="Map">
-    <label for="locationName">Lokasjonsnavn</label>
-    <input type="text" id="locationName" name="locationName" value="Oslo" required />
+    <form method="post" asp-action="Map" class="form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-    <label for="latitude">Breddegrad</label>
-    <input type="number" id="latitude" name="latitude" step="any" value="59.9139" required />
+        <div class="form-group">
+            <label for="locationName">Lokasjonsnavn <span class="required">*</span></label>
+            <input type="text" id="locationName" name="locationName" value="@(Model?.LocationName ?? "Oslo")" class="form-control" required />
+            <span asp-validation-for="LocationName" class="text-danger"></span>
+        </div>
 
-    <label for="longitude">Lengdegrad</label>
-    <input type="number" id="longitude" name="longitude" step="any" value="10.7522" required />
+        <div class="form-row">
+            <div class="form-group">
+                <label for="latitude">Breddegrad <span class="required">*</span></label>
+                <input type="number" id="latitude" name="latitude" step="0.000001" value="@(Model?.Latitude ?? 59.9139)" class="form-control" required />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
 
-    <button type="submit">Vis kart</button>
-</form>
+            <div class="form-group">
+                <label for="longitude">Lengdegrad <span class="required">*</span></label>
+                <input type="number" id="longitude" name="longitude" step="0.000001" value="@(Model?.Longitude ?? 10.7522)" class="form-control" required />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+        </div>
+
+        <p class="info">Standard koordinater: Oslo (59.9139°N, 10.7522°E)</p>
+
+        <button type="submit" class="btn-submit">Vis kart</button>
+    </form>
+</div>
