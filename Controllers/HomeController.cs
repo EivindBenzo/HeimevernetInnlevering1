@@ -1,29 +1,48 @@
+using HeimevernetInnlevering1.Data;
+using HeimevernetInnlevering1.Models;
+using HeimevernetInnlevering1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeimevernetInnlevering1.Controllers;
 
 public class HomeController : Controller
 {
-    [HttpGet]
-    public IActionResult Index()
+    private readonly AppDbContext _db;
+
+    public HomeController(AppDbContext db)
     {
-        return View();
+        _db = db;
     }
 
     [HttpGet]
-    public IActionResult Form()
-    {
-        return View(new FormSubmissionViewModel());
-    }
+    public IActionResult Index() => View();
+
+    [HttpGet]
+    public IActionResult Form() => View(new FormSubmissionViewModel());
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Form(FormSubmissionViewModel model)
+    public async Task<IActionResult> Form(FormSubmissionViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
+
+        var submission = new FormSubmission
+        {
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Email = model.Email,
+            Description = model.Message,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+
+        _db.FormSubmissions.Add(submission);
+        await _db.SaveChangesAsync();
+
+        HttpContext.Session.SetInt32("RegistrationId", submission.Id);
 
         return RedirectToAction(nameof(Result), new
         {
@@ -43,19 +62,27 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult Map()
-    {
-        return View(new MapSubmissionViewModel());
-    }
+    public IActionResult Map() => View(new MapSubmissionViewModel());
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Map(MapSubmissionViewModel model)
+    public async Task<IActionResult> Map(MapSubmissionViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
+
+        var submission = new MapSubmission
+        {
+            LocationName = model.LocationName,
+            Latitude = model.Latitude,
+            Longitude = model.Longitude,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+
+        _db.MapSubmissions.Add(submission);
+        await _db.SaveChangesAsync();
 
         return RedirectToAction(nameof(MapResult), new
         {
@@ -75,8 +102,20 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult Data()
+    public async Task<IActionResult> Data()
     {
-        return View();
+        var model = new DataPageViewModel
+        {
+            FormSubmissions = await _db.FormSubmissions
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAtUtc)
+                .ToListAsync(),
+            MapSubmissions = await _db.MapSubmissions
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAtUtc)
+                .ToListAsync()
+        };
+
+        return View(model);
     }
 }
