@@ -4,9 +4,9 @@ ASP.NET Core MVC-applikasjon for registrering av hendelser i Heimevernet, med sk
 
 ## Innhold i leveransen
 
-- Controller (`/home/runner/work/KriseberedskapInnleveringer/KriseberedskapInnleveringer/Heimevernet.Web/Controllers/BeredskapController.cs`)
-- ViewModel (`/home/runner/work/KriseberedskapInnleveringer/KriseberedskapInnleveringer/Heimevernet.Web/Models/IncidentReportFormViewModel.cs`)
-- Views (`/home/runner/work/KriseberedskapInnleveringer/KriseberedskapInnleveringer/Heimevernet.Web/Views/Beredskap/*`)
+- Controller (`Heimevernet.Web/Controllers/BeredskapController.cs`)
+- ViewModel (`Heimevernet.Web/Models/IncidentReportFormViewModel.cs`)
+- Views (`Heimevernet.Web/Views/Beredskap/*`)
 - Håndtering av GET og POST for skjema
 - Kartintegrasjon (Leaflet/OpenStreetMap) med koordinatinnhenting
 - Resultatside som viser innsendte data fra skjema og kart
@@ -16,13 +16,13 @@ ASP.NET Core MVC-applikasjon for registrering av hendelser i Heimevernet, med sk
 
 ### Lokal kjøring
 1. Gå til prosjektmappen:
-   - `/home/runner/work/KriseberedskapInnleveringer/KriseberedskapInnleveringer/Heimevernet.Web`
+   - `Heimevernet.Web`
 2. Kjør:
    - `dotnet run`
 3. Åpne URL som vises i terminalen.
 
 ### Kjøring i Docker
-Fra rotmappen (`/home/runner/work/KriseberedskapInnleveringer/KriseberedskapInnleveringer`):
+Fra rotmappen (`repository root`):
 
 1. Bygg image:
    - `docker build -t heimevernet-web .`
