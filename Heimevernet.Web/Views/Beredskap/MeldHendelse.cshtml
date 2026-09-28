@@ -12,6 +12,7 @@
 
     <div class="col-12 col-lg-7">
         <form asp-action="MeldHendelse" method="post" novalidate>
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="ReporterName" class="form-label"></label>
