@@ -70,8 +70,8 @@ header::after {
 
 .nav-brand img {
     display: block;
-    height: 50px;
-    width: 78px;
+    height: 80px;
+    width: 124px;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
@@ -585,7 +585,8 @@ footer {
     }
 
     .nav-brand img {
-        height: 40px;
+        height: 56px;
+        width: auto;
     }
 
     .hero-photo {
