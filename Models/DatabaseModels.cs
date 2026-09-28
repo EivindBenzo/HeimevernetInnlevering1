@@ -18,8 +18,6 @@ public class FormSubmission
     [Required, MaxLength(1000)]
     public string Description { get; set; } = string.Empty;
 
-    // Optional location linked from the Kart page when the user selects one
-    // while filling out Skjema.
     public string? LocationName { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
@@ -27,9 +25,18 @@ public class FormSubmission
     public DateTime CreatedAtUtc { get; set; }
 }
 
+/// <summary>
+/// A resource placed on the map (based on Marius' Ressurs entity).
+/// </summary>
 public class MapSubmission
 {
     public int Id { get; set; }
+
+    [Required, MaxLength(100)]
+    public string ResourceName { get; set; } = string.Empty;
+
+    [Required, MaxLength(50)]
+    public string ResourceType { get; set; } = string.Empty;
 
     [Required, MaxLength(200)]
     public string LocationName { get; set; } = string.Empty;

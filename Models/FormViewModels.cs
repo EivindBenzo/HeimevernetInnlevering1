@@ -28,6 +28,19 @@ public class FormSubmissionViewModel
 
 public class MapSubmissionViewModel
 {
+    // Resource types taken from the Marius branch.
+    public static readonly string[] ResourceTypes =
+    {
+        "Kjøretøy", "Maskin", "Drone", "Generator", "Personell", "Utstyr"
+    };
+
+    [Required(ErrorMessage = "Ressursnavn er påkrevd")]
+    [StringLength(100, MinimumLength = 2, ErrorMessage = "Ressursnavn må være mellom 2 og 100 tegn")]
+    public string ResourceName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Velg en ressurstype")]
+    public string ResourceType { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Lokasjonsnavn er påkrevd")]
     [StringLength(200, MinimumLength = 2, ErrorMessage = "Lokasjonsnavn må være mellom 2 og 200 tegn")]
     public string LocationName { get; set; } = string.Empty;
