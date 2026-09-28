@@ -1,0 +1,117 @@
+@model Heimevernet.Web.Models.IncidentReportFormViewModel
+@{
+    ViewData["Title"] = "Meld hendelse";
+}
+
+<div class="row g-4">
+    <div class="col-12">
+        <h1 class="h3">Meld hendelse til Heimevernet</h1>
+        <p class="text-muted mb-1">Dynamisk serverdata: @Model.ServerGeneratedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")</p>
+        <p class="text-muted">Fyll inn skjemaet og velg posisjon i kartet.</p>
+    </div>
+
+    <div class="col-12 col-lg-7">
+        <form asp-action="MeldHendelse" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="ReporterName" class="form-label"></label>
+                <input asp-for="ReporterName" class="form-control" />
+                <span asp-validation-for="ReporterName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="UnitName" class="form-label"></label>
+                <input asp-for="UnitName" class="form-control" />
+                <span asp-validation-for="UnitName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IncidentType" class="form-label"></label>
+                <select asp-for="IncidentType" class="form-select">
+                    <option value="">Velg type</option>
+                    @foreach (var type in Model.AvailableIncidentTypes)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+                <span asp-validation-for="IncidentType" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IncidentTime" class="form-label"></label>
+                <input asp-for="IncidentTime" class="form-control" type="datetime-local"
+                       value="@Model.IncidentTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" />
+                <span asp-validation-for="IncidentTime" class="text-danger"></span>
+            </div>
+
+            <input asp-for="Latitude" type="hidden" id="latitude" />
+            <input asp-for="Longitude" type="hidden" id="longitude" />
+            <div class="mb-3">
+                <label class="form-label">Valgt posisjon</label>
+                <div class="form-control bg-light" id="selectedPosition">Ingen posisjon valgt.</div>
+                <span asp-validation-for="Latitude" class="text-danger d-block"></span>
+                <span asp-validation-for="Longitude" class="text-danger d-block"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Send melding</button>
+        </form>
+    </div>
+
+    <div class="col-12 col-lg-5">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5">Kart</h2>
+                <p class="small text-muted">Klikk i kartet for å lagre koordinater i skjemaet.</p>
+                <div id="incidentMap" class="rounded border" style="height: 340px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script>
+        const latitudeInput = document.getElementById("latitude");
+        const longitudeInput = document.getElementById("longitude");
+        const selectedPosition = document.getElementById("selectedPosition");
+        const existingLatitude = parseFloat(latitudeInput.value);
+        const existingLongitude = parseFloat(longitudeInput.value);
+        const hasExistingCoords = !Number.isNaN(existingLatitude) && !Number.isNaN(existingLongitude);
+
+        const map = L.map("incidentMap").setView(hasExistingCoords ? [existingLatitude, existingLongitude] : [58.1467, 7.9956], hasExistingCoords ? 12 : 7);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+
+        let marker;
+
+        function setMarker(lat, lng) {
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            latitudeInput.value = lat.toFixed(6);
+            longitudeInput.value = lng.toFixed(6);
+            selectedPosition.textContent = `Breddegrad: ${latitudeInput.value}, lengdegrad: ${longitudeInput.value}`;
+        }
+
+        if (hasExistingCoords) {
+            setMarker(existingLatitude, existingLongitude);
+        }
+
+        map.on("click", function (event) {
+            setMarker(event.latlng.lat, event.latlng.lng);
+        });
+    </script>
+}

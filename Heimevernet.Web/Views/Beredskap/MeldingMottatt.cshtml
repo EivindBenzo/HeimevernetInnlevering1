@@ -1,0 +1,42 @@
+@model Heimevernet.Web.Models.IncidentReportResultViewModel
+@{
+    ViewData["Title"] = "Melding mottatt";
+}
+
+<div class="row g-4">
+    <div class="col-12">
+        <h1 class="h3 text-success">Melding mottatt</h1>
+        <p>Meldingen ble behandlet @Model.ProcessedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")</p>
+    </div>
+
+    <div class="col-12 col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5">Innsendt data</h2>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Navn</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.ReporterName</dd>
+
+                    <dt class="col-sm-4">Avdeling</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.UnitName</dd>
+
+                    <dt class="col-sm-4">Hendelsestype</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.IncidentType</dd>
+
+                    <dt class="col-sm-4">Beskrivelse</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.Description</dd>
+
+                    <dt class="col-sm-4">Observasjonstid</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.IncidentTime.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-4">Koordinater</dt>
+                    <dd class="col-sm-8">@Model.SubmittedReport.Latitude, @Model.SubmittedReport.Longitude</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <a asp-controller="Beredskap" asp-action="MeldHendelse" class="btn btn-outline-primary">Registrer ny hendelse</a>
+    </div>
+</div>
