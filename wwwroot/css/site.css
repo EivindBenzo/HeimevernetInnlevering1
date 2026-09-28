@@ -71,7 +71,7 @@ header::after {
 .nav-brand img {
     display: block;
     height: 80px;
-    width: 124px;
+    width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
