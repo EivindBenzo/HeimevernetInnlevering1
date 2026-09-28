@@ -1,4 +1,4 @@
-@model MapSubmissionViewModel
+@model HeimevernetInnlevering1.Models.MapSubmissionViewModel
 @{
     ViewData["Title"] = "Kart";
 }
@@ -20,14 +20,14 @@
 
         <div class="form-group">
             <label for="locationName">Lokasjonsnavn <span class="required">*</span></label>
-            <input type="text" id="locationName" name="locationName" value="@(Model?.LocationName ?? "Oslo")" class="form-control" required />
+            <input type="text" id="locationName" name="locationName" value="@(Model?.LocationName ?? "Kristiansand")" class="form-control" required />
             <span asp-validation-for="LocationName" class="text-danger"></span>
         </div>
 
-        <input type="hidden" id="latitude" name="latitude" value="@((Model?.Latitude ?? 59.9139).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
-        <input type="hidden" id="longitude" name="longitude" value="@((Model?.Longitude ?? 10.7522).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+        <input type="hidden" id="latitude" name="latitude" value="@((Model?.Latitude ?? 58.1467).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+        <input type="hidden" id="longitude" name="longitude" value="@((Model?.Longitude ?? 7.9956).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
 
-        <p class="info">Standardlokasjon: Oslo. Søk etter en by eller klikk i kartet for å velge lokasjon.</p>
+        <p class="info">Standardlokasjon: Kristiansand. Søk etter en by eller klikk i kartet for å velge lokasjon.</p>
         <div id="map" aria-label="Interaktivt kart"></div>
         <button type="submit" class="btn-submit">Vis kart</button>
     </form>
@@ -36,8 +36,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const startLat = @((Model?.Latitude ?? 59.9139).ToString(System.Globalization.CultureInfo.InvariantCulture));
-    const startLng = @((Model?.Longitude ?? 10.7522).ToString(System.Globalization.CultureInfo.InvariantCulture));
+    const startLat = @((Model?.Latitude ?? 58.1467).ToString(System.Globalization.CultureInfo.InvariantCulture));
+    const startLng = @((Model?.Longitude ?? 7.9956).ToString(System.Globalization.CultureInfo.InvariantCulture));
     const map = L.map('map').setView([startLat, startLng], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

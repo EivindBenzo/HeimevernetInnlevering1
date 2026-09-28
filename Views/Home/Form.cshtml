@@ -7,8 +7,17 @@
     <h1>Skjema</h1>
     <p>Fyll ut skjemaet under. Alle felt er påkrevd.</p>
 
+    @if (Model?.Latitude.HasValue == true && Model?.Longitude.HasValue == true)
+    {
+        <p class="info">Koblet lokasjon fra Kart: @Model.LocationName (@Model.Latitude?.ToString("F6"), @Model.Longitude?.ToString("F6"))</p>
+    }
+
     <form method="post" asp-action="Form" class="form">
         <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <input type="hidden" name="LocationName" value="@Model?.LocationName" />
+        <input type="hidden" name="Latitude" value="@Model?.Latitude" />
+        <input type="hidden" name="Longitude" value="@Model?.Longitude" />
 
         <div class="form-group">
             <label for="firstName">Fornavn <span class="required">*</span></label>

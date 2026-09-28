@@ -19,7 +19,24 @@ public class HomeController : Controller
     public IActionResult Index() => View();
 
     [HttpGet]
-    public IActionResult Form() => View(new FormSubmissionViewModel());
+    public IActionResult Form()
+    {
+        var model = new FormSubmissionViewModel();
+
+        // Pre-fill with a location chosen on the Kart page in this session, if any.
+        var lat = HttpContext.Session.GetString("PendingLat");
+        var lng = HttpContext.Session.GetString("PendingLng");
+        var locationName = HttpContext.Session.GetString("PendingLocationName");
+
+        if (!string.IsNullOrEmpty(lat) && !string.IsNullOrEmpty(lng))
+        {
+            model.Latitude = double.Parse(lat, System.Globalization.CultureInfo.InvariantCulture);
+            model.Longitude = double.Parse(lng, System.Globalization.CultureInfo.InvariantCulture);
+            model.LocationName = locationName;
+        }
+
+        return View(model);
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -36,6 +53,9 @@ public class HomeController : Controller
             LastName = model.LastName,
             Email = model.Email,
             Description = model.Message,
+            LocationName = model.LocationName,
+            Latitude = model.Latitude,
+            Longitude = model.Longitude,
             CreatedAtUtc = DateTime.UtcNow
         };
 
@@ -43,6 +63,9 @@ public class HomeController : Controller
         await _db.SaveChangesAsync();
 
         HttpContext.Session.SetInt32("RegistrationId", submission.Id);
+        HttpContext.Session.Remove("PendingLat");
+        HttpContext.Session.Remove("PendingLng");
+        HttpContext.Session.Remove("PendingLocationName");
 
         return RedirectToAction(nameof(Result), new
         {
@@ -62,7 +85,12 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult Map() => View(new MapSubmissionViewModel());
+    public IActionResult Map() => View(new MapSubmissionViewModel
+    {
+        LocationName = "Kristiansand",
+        Latitude = 58.1467,
+        Longitude = 7.9956
+    });
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -84,6 +112,11 @@ public class HomeController : Controller
         _db.MapSubmissions.Add(submission);
         await _db.SaveChangesAsync();
 
+        // Remember this location so it can be linked to the user's Skjema registration.
+        HttpContext.Session.SetString("PendingLat", model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        HttpContext.Session.SetString("PendingLng", model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        HttpContext.Session.SetString("PendingLocationName", model.LocationName);
+
         return RedirectToAction(nameof(MapResult), new
         {
             locationName = model.LocationName,
@@ -103,6 +136,26 @@ public class HomeController : Controller
 
     [HttpGet]
     public async Task<IActionResult> Data()
+    {
+        var model = new DataPageViewModel
+        {
+            FormSubmissions = await _db.FormSubmissions
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAtUtc)
+                .ToListAsync(),
+            MapSubmissions = await _db.MapSubmissions
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAtUtc)
+                .ToListAsync()
+        };
+
+        return View(model);
+    }
+
+    // Simple verification page: proves data survives app restarts by reading
+    // straight from the database and showing row counts and raw rows.
+    [HttpGet]
+    public async Task<IActionResult> Verify()
     {
         var model = new DataPageViewModel
         {

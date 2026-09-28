@@ -19,6 +19,11 @@ public class FormSubmissionViewModel
     [Required(ErrorMessage = "Beskrivelse er påkrevd")]
     [StringLength(1000, MinimumLength = 10, ErrorMessage = "Beskrivelsen må være mellom 10 og 1000 tegn")]
     public string Message { get; set; } = string.Empty;
+
+    // Optional location chosen on the Kart page, linked to this registration.
+    public string? LocationName { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 }
 
 public class MapSubmissionViewModel
