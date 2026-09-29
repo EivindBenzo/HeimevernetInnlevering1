@@ -1,6 +1,6 @@
 # Heimevernet beredskapsapplikasjon
 
-ASP.NET Core MVC-applikasjon for registrering av hendelser i Heimevernet, med skjema + kart og visning av innsendte data.
+Dette er gruppens ASP.NET Core MVC-prosjekt for å registrere kontaktinformasjon og plassere ressurser på et kart. Denne README-en beskriver det som faktisk ligger i main etter at arbeidet fra oliver-branch ble slått inn. Alle i gruppa jobbet felles i samme branch
 
 ## Innhold i leveransen
 
