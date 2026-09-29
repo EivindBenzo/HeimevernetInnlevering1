@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Heimevernet</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a asp-controller="Home" asp-action="Index" class="nav-brand" aria-label="Hjem">
+                    <img src="~/images/forsvaret-logo.png" alt="Forsvaret logo" />
+                </a>
+
+                <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Åpne meny">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a asp-controller="Home" asp-action="Index" class="nav-link">Hjem</a></li>
+                    <li><a asp-controller="Home" asp-action="Form" class="nav-link">Skjema</a></li>
+                    <li><a asp-controller="Home" asp-action="Map" class="nav-link">Kart</a></li>
+                    <li><a asp-controller="Home" asp-action="Data" class="nav-link">Data</a></li>
+                    <li><a asp-controller="Home" asp-action="Verify" class="nav-link">Verifiser</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Heimevernet Innlevering 1 - ASP.NET Core MVC</p>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', function () {
+            const isOpen = navMenu.classList.toggle('open');
+            menuToggle.classList.toggle('open', isOpen);
+            menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                navMenu.classList.remove('open');
+                menuToggle.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+</body>
+</html>

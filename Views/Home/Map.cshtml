@@ -1,0 +1,221 @@
+@model MapSubmissionViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Kart";
+    var resources = (ViewBag.Resources as List<HeimevernetInnlevering1.Models.MapSubmission>) ?? new();
+    var resourcesJson = System.Text.Json.JsonSerializer.Serialize(resources.Select(r => new
+    {
+        name = r.ResourceName,
+        type = r.ResourceType,
+        location = r.LocationName,
+        lat = r.Latitude,
+        lng = r.Longitude
+    }));
+    var startLat = (Model?.Latitude ?? 58.1467).ToString(CultureInfo.InvariantCulture);
+    var startLng = (Model?.Longitude ?? 7.9956).ToString(CultureInfo.InvariantCulture);
+}
+
+<div class="map-container">
+    <span class="eyebrow">RESSURSER</span>
+    <h1>Kart</h1>
+    <p>Velg ressurstype, skriv inn navn og klikk i kartet (eller søk etter en by) for å plassere ressursen.</p>
+
+    @if (TempData["MapSuccess"] is string success)
+    {
+        <p class="info">✅ @success</p>
+    }
+
+    <form method="post" asp-action="Map" class="form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="resourceType">Ressurstype <span class="required">*</span></label>
+                <select id="resourceType" name="ResourceType" class="form-control" required>
+                    <option value="">Velg type</option>
+                    @foreach (var type in MapSubmissionViewModel.ResourceTypes)
+                    {
+                        <option value="@type" selected="@(Model?.ResourceType == type)">@type</option>
+                    }
+                </select>
+                <span asp-validation-for="ResourceType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="resourceName">Ressursnavn <span class="required">*</span></label>
+                <input type="text" id="resourceName" name="ResourceName" value="@Model?.ResourceName" class="form-control" placeholder="f.eks. Lastebil 1" required />
+                <span asp-validation-for="ResourceName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group city-search-group">
+            <label for="citySearch">Søk etter by</label>
+            <input type="text" id="citySearch" class="form-control" placeholder="Skriv navnet på en by, f.eks. Bergen" autocomplete="off" />
+            <ul id="citySuggestions" class="city-suggestions"></ul>
+            <span class="info" id="citySearchStatus"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="locationName">Lokasjonsnavn <span class="required">*</span></label>
+            <input type="text" id="locationName" name="LocationName" value="@(Model?.LocationName ?? "Kristiansand")" class="form-control" required />
+            <span asp-validation-for="LocationName" class="text-danger"></span>
+        </div>
+
+        <input type="hidden" id="latitude" name="Latitude" value="@startLat" />
+        <input type="hidden" id="longitude" name="Longitude" value="@startLng" />
+
+        <p class="info">Standardlokasjon: Kristiansand. Klikk i kartet for å velge nøyaktig plassering.</p>
+        <div id="map" aria-label="Interaktivt kart"></div>
+        <button type="submit" class="btn-submit">Send inn</button>
+    </form>
+
+    <h2>Registrerte ressurser (@resources.Count)</h2>
+    @if (resources.Count == 0)
+    {
+        <p>Ingen ressurser er registrert ennå.</p>
+    }
+    else
+    {
+        <div class="feature-grid">
+            @foreach (var r in resources)
+            {
+                <div class="feature-card resource-card"
+                     data-lat="@r.Latitude.ToString(CultureInfo.InvariantCulture)"
+                     data-lng="@r.Longitude.ToString(CultureInfo.InvariantCulture)"
+                     style="cursor:pointer">
+                    <span class="eyebrow">@r.ResourceType</span>
+                    <h3>@r.ResourceName</h3>
+                    <p>📍 @r.LocationName<br />@r.Latitude.ToString("F5", CultureInfo.InvariantCulture), @r.Longitude.ToString("F5", CultureInfo.InvariantCulture)</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    select.form-control option { background: #0f172a; color: #f1f5f9; }
+    .resource-popup strong { display: block; font-size: 1rem; }
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const startLat = @startLat;
+    const startLng = @startLng;
+    const savedResources = @Html.Raw(resourcesJson);
+
+    const map = L.map('map').setView([startLat, startLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text ?? '';
+        return div.innerHTML;
+    }
+
+    // Markers for all stored resources, each with a small info box.
+    savedResources.forEach(function (r) {
+        L.marker([r.lat, r.lng]).addTo(map).bindPopup(
+            '<div class="resource-popup"><strong>' + escapeHtml(r.name) + '</strong>' +
+            'Type: ' + escapeHtml(r.type) + '<br>' +
+            'Sted: ' + escapeHtml(r.location) + '<br>' +
+            r.lat.toFixed(5) + ', ' + r.lng.toFixed(5) + '</div>'
+        );
+    });
+
+    // Marker for the location currently being chosen.
+    let marker = L.marker([startLat, startLng], { opacity: 0.6 }).addTo(map);
+    marker.bindPopup('Ny ressurs plasseres her').openPopup();
+
+    function setLocation(lat, lng, label) {
+        map.setView([lat, lng], map.getZoom());
+        map.removeLayer(marker);
+        marker = L.marker([lat, lng], { opacity: 0.6 }).addTo(map);
+        marker.bindPopup(label || 'Ny ressurs plasseres her').openPopup();
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+    }
+
+    map.on('click', function (e) {
+        setLocation(e.latlng.lat, e.latlng.lng,
+            'Ny ressurs plasseres her<br>' + e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5));
+    });
+
+    document.querySelectorAll('.resource-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            map.setView([parseFloat(card.dataset.lat), parseFloat(card.dataset.lng)], 15);
+            document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // City search with autocomplete (OpenStreetMap Nominatim)
+    const citySearchInput = document.getElementById('citySearch');
+    const citySuggestionsList = document.getElementById('citySuggestions');
+    const citySearchStatus = document.getElementById('citySearchStatus');
+    const locationNameInput = document.getElementById('locationName');
+    let searchTimeout = null;
+    let currentController = null;
+
+    function clearSuggestions() {
+        citySuggestionsList.innerHTML = '';
+        citySuggestionsList.classList.remove('open');
+    }
+
+    function renderSuggestions(results) {
+        clearSuggestions();
+        if (!results || results.length === 0) return;
+
+        results.forEach(function (place) {
+            const item = document.createElement('li');
+            item.className = 'city-suggestion-item';
+            item.textContent = place.display_name;
+            item.addEventListener('click', function () {
+                locationNameInput.value = place.display_name.split(',')[0];
+                citySearchInput.value = place.display_name;
+                setLocation(parseFloat(place.lat), parseFloat(place.lon), escapeHtml(place.display_name));
+                map.setZoom(12);
+                clearSuggestions();
+            });
+            citySuggestionsList.appendChild(item);
+        });
+        citySuggestionsList.classList.add('open');
+    }
+
+    citySearchInput.addEventListener('input', function () {
+        const query = citySearchInput.value.trim();
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        if (query.length < 2) {
+            clearSuggestions();
+            citySearchStatus.textContent = '';
+            return;
+        }
+
+        citySearchStatus.textContent = 'Søker...';
+        searchTimeout = setTimeout(function () {
+            if (currentController) currentController.abort();
+            currentController = new AbortController();
+            const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=0&limit=6&q=' + encodeURIComponent(query);
+
+            fetch(url, { signal: currentController.signal, headers: { 'Accept-Language': 'no,en' } })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    citySearchStatus.textContent = data.length === 0 ? 'Ingen treff' : '';
+                    renderSuggestions(data);
+                })
+                .catch(function (error) {
+                    if (error.name !== 'AbortError') {
+                        citySearchStatus.textContent = 'Kunne ikke hente forslag akkurat nå.';
+                    }
+                });
+        }, 400);
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!citySuggestionsList.contains(event.target) && event.target !== citySearchInput) {
+            clearSuggestions();
+        }
+    });
+</script>
