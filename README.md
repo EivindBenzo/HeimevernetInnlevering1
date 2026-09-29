@@ -57,3 +57,20 @@ docker compose up --build
 - Skjemaendringer krever migrering eller manuell oppgradering av SQLite-databasen; `EnsureCreated()` utfører ingen migrasjoner.
 - Kartfliser, Leaflet og bysøk bruker eksterne nettjenester og krever nettverkstilgang.
 - En tidligere lokal `dotnet run` rapporterte NuGet-varselet `NU1903` for transitiv `SQLitePCLRaw.lib.e_sqlite3` 2.1.11. Avhengigheter bør gjennomgås og oppdateres før produksjonsbruk; et vellykket bygg er ikke dokumentasjon på at varselet er løst.
+## Bruk av KI i prosjektet
+
+Formål med KI-bruk:
+- Strukturering av leveransekrav til konkrete utviklingsoppgaver.
+- Forslag til oppsett av MVC-komponenter (controller/viewmodel/view).
+- Kvalitetssikring av dokumentasjon og leveranseinnhold.
+
+Verktøy brukt:
+- GitHub Copilot (agentbasert arbeidsflyt)
+
+Eksempler på prompt-kommandoer brukt i prosessen:
+- «Lag en ASP.NET Core MVC-løsning med GET/POST for hendelsesskjema.»
+- «Legg til kart (Leaflet) og send koordinater i samme skjema.»
+- «Oppdater README med drift, arkitektur, testscenarier og KI-bruk.»
+
+KI ble brukt som støtteverktøy for idé, struktur og kodeforslag. Gruppen evaluerte og tilpasset resultatet manuelt før ferdigstillelse.
+
