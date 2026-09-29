@@ -132,12 +132,8 @@ Verktøy brukt:
 
 Eksempler på prompt-kommandoer brukt i prosessen:
 - «Lag en ASP.NET Core MVC-løsning med GET/POST for hendelsesskjema.»
-- «Legg til kart (Leaflet) og send koordinater i samme skjema.»
 - «Se på Marius-branchen og kombiner Entity Framework med skjema- og kartdesignet, slik at informasjonen faktisk lagres.»
-- «Gjør at brukere som ikke har fylt ut skjemaet alltid får det først.»
 - «La kartet starte i Kristiansand og lag en side som viser lagret informasjon.»
-- «Legg til ressurstype og ressursnavn fra Marius-branchen, og bytt "Vis kart" med "Send inn".»
-- «Koble databasen til Docker.»
-- «Oppdater README med drift, arkitektur, testscenarier og KI-bruk.»
+- «Legg til ressurstype og ressursnavn fra Marius-branchen»
 
 KI ble brukt som støtteverktøy for idé, struktur og kodeforslag. Gruppen evaluerte, testet og tilpasset resultatet manuelt før ferdigstillelse. Før større endringer ble det laget en backup-branch (`backup/oliver-before-resource-map-2026-09-28`) slik at endringene kunne rulles tilbake.
